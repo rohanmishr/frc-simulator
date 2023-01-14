@@ -1,107 +1,148 @@
 <html>
-    <head>
-        <script src="https://code.jquery.com/jquery-3.6.3.js" integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
-        <style>
-            canvas{
-                border-style: solid;
-                border-width: 2px;
-            }
-            html{
-                font-family: sans-serif;
-                background-color: rgb(65, 65, 65);
-            }
-        </style>
-    </head>
-    <body>
-        <h1 id="phaseDisplay">charged up simulator</h1>
-        <button onclick="switchPhase('auto')">Auto</button>
-        <button onclick="switchPhase('teleop')">Teleop</button>
-        <button onclick="drawField()">Draw field</button>
-        <br><br>
-        <canvas id="canvas" width=1304; height=640;></canvas>
+	<head>
+		<script src="https://code.jquery.com/jquery-3.6.3.js" integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
+		<style>
+		canvas {
+			border-style: solid;
+			border-width: 2px;
+		}
 
-        <script>
-            var canvas = document.getElementById("canvas");
-            var ctx = canvas.getContext("2d");
-          
-            //draw field, 2px = 1 in. also fillRect(x, y, w, h)
-            function drawField(){
-                //field lines
-                ctx.fillStyle = "black";
-                ctx.fillRect(652, 0, 10, 640);
+		html {
+			font-family: sans-serif;
+			background-color: rgb(65, 65, 65);
+		}
+		</style>
+	</head>
 
-                //blue nodes
-                ctx.fillStyle = "blue";
-                ctx.fillRect(120, 220, 10, 440);
-                ctx.fillRect(0, 220, 260, 10);
+	<body>
+		<h1 id="phaseDisplay">charged up simulator</h1>
+		<button onclick="switchPhase('auto')">Auto</button>
+		<button onclick="switchPhase('teleop')">Teleop</button>
+		<input placeholder="Enter speed value..." id="speedInput"><button onclick="changeSpeed()">Submit!</button>
+		<br><br>
+		<canvas id="canvas" width=1304; height=640;></canvas>
+		<script>
+		var canvas = document.getElementById("canvas");
+		var ctx = canvas.getContext("2d");
+		//draw field, 2px = 1 in. also fillRect(x, y, w, h)
+		function drawField() {
+			//field lines
+			ctx.fillStyle = "black";
+			ctx.fillRect(652, 0, 10, 640);
+			//blue nodes
+			ctx.fillStyle = "blue";
+			ctx.fillRect(120, 220, 10, 440);
+			ctx.fillRect(0, 220, 260, 10);
+			//red nodes
+			ctx.fillStyle = "red";
+			ctx.fillRect(1184, 220, 10, 440);
+			ctx.fillRect(1054, 220, 260, 10);
+			//blue charging line
+			ctx.fillStyle = "blue";
+			ctx.fillRect(360, 310, 10, 440);
+			//charging station
+			ctx.fillRect(220, 480, 150, 10);
+			ctx.fillRect(220, 310, 150, 10);
+			ctx.fillRect(220, 310, 10, 180); //line on side
+			//above charging station
+			ctx.fillRect(260, 220, 10, 100);
+			//red charging line
+			ctx.fillStyle = "red";
+			ctx.fillRect(944, 310, 10, 440);
+			//charging station
+			ctx.fillRect(944, 480, 150, 10);
+			ctx.fillRect(944, 310, 150, 10);
+			ctx.fillRect(1094, 310, 10, 180); //line on side
+			//above charging station
+			ctx.fillRect(1044, 220, 10, 100);
+			//top
+			ctx.fillStyle = "blue";
+			ctx.fillRect(1044, 120, 10, 100);
+			ctx.fillRect(804, 120, 250, 10);
+			ctx.fillRect(804, 0, 10, 130);
+			ctx.fillStyle = "red";
+			ctx.fillRect(260, 120, 10, 100);
+			ctx.fillRect(260, 120, 250, 10);
+			ctx.fillRect(500, 0, 10, 130);
+		}
+		drawField();
 
-                //red nodes
-                ctx.fillStyle = "red";
-                ctx.fillRect(1184, 220, 10, 440);
-                ctx.fillRect(1054, 220, 260, 10);
+		function hitbox(x, y) {
+			this.x = x;
+			this.y = y;
+		}
+		var robot = new hitbox(250, 250);
 
-                //blue charging line
-                ctx.fillStyle = "blue";
-                ctx.fillRect(360, 310, 10, 440);
-                //charging station
-                ctx.fillRect(220, 480, 150, 10);
-                ctx.fillRect(220, 310, 150, 10);
-                ctx.fillRect(220, 310, 10, 180); //line on side
-                //above charging station
-                ctx.fillRect(260, 220, 10, 100);
+		function update() {
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			drawField();
+			ctx.fillStyle = "white";
+			ctx.fillRect(robot.x, robot.y, 50, 50);
+		}
+		update();
+		var pressedW = false;
+		var pressedS = false;
+		var pressedA = false;
+		var pressedD = false;
+		document.onkeydown = function(e) {
+			console.log(e.keyCode);
+			if(e.keyCode == 87) {
+				pressedW = true;
+			} else if(e.keyCode == 83) {
+				pressedS = true;
+			} else if(e.keyCode == 65) {
+				pressedA = true;
+			} else if(e.keyCode == 68) {
+				pressedD = true;
+			}
+		}
+		document.onkeyup = function(e) {
+			console.log(e.keyCode);
+			if(e.keyCode == 87) {
+				pressedW = false;
+			} else if(e.keyCode == 83) {
+				pressedS = false;
+			} else if(e.keyCode == 65) {
+				pressedA = false;
+			} else if(e.keyCode == 68) {
+				pressedD = false;
+			}
+		}
+		var phase = "auto";
 
-                //red charging line
-                ctx.fillStyle = "red";
-                ctx.fillRect(944, 310, 10, 440);
-                //charging station
-                ctx.fillRect(944, 480, 150, 10);
-                ctx.fillRect(944, 310, 150, 10);
-                ctx.fillRect(1094, 310, 10, 180); //line on side
-                //above charging station
-                ctx.fillRect(1044, 220, 10, 100);
+		function switchPhase(p) {
+			if(p == "auto") {
+				phase = "auto";
+			} else if(p == "teleop") {
+				phase = "teleop";
+			}
+		}
+		var robotSpeed = 3;
 
-                //top
-                ctx.fillStyle = "blue";
-                ctx.fillRect(1044, 120, 10, 100);
-                ctx.fillRect(804, 120, 250, 10);
-                ctx.fillRect(804, 0, 10, 130);
+		function changeSpeed() {
+			robotSpeed = parseInt($("#speedInput").value);
+		}
+		setInterval(function() {
+			if(phase == "auto") {
+				$("#phaseDisplay").text("phase: autonomous");
+			} else if(phase == "teleop") {
+				$("#phaseDisplay").text("phase: teleoperated");
+			}
+			if(pressedW === true) {
+				robot.y -= robotSpeed;
+				update();
+			} else if(pressedS === true) {
+				robot.y += robotSpeed;
+				update();
+			} else if(pressedA === true) {
+				robot.x -= robotSpeed;
+				update();
+			} else if(pressedD === true) {
+				robot.x += robotSpeed;
+				update();
+			}
+		}, 1)
+		</script>
+	</body>
 
-                ctx.fillStyle = "red";
-                ctx.fillRect(260, 120, 10, 100);
-                ctx.fillRect(260, 120, 250, 10);
-                ctx.fillRect(500, 0, 10, 130);
-            }
-            
-            drawField();
-
-            function hitbox(x, y){
-                this.x = x;
-                this.y = y;
-            }
-
-            var robot = new hitbox(250, 250);
-
-            var phase = "auto";
-            function switchPhase(p){
-                if(p == "auto"){
-                    phase = "auto";
-                }else if(p == "teleop"){
-                    phase = "teleop";
-                }
-            }
-
-            setInterval(function(){
-                if(phase == "auto"){
-                    $("#phaseDisplay").text("phase: autonomous");
-                }else if(phase == "teleop"){
-                    $("#phaseDisplay").text("phase: teleoperated");
-                }
-
-                ctx.clear();
-                drawField();
-                ctx.fillStyle = "white";
-                ctx.fillRect(robot.x, robot.y, 10, 10);
-            },1)
-        </script>
-    </body>
 </html>
