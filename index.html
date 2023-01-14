@@ -25,53 +25,52 @@
 
 <body>
 	<style>
-		.button {
-		  position: relative;
-		  background-color: #04AA6D;
-		  border: none;
-		  font-size: 28px;
-		  color: #FFFFFF;
-		  padding: 20px;
-		  width: 200px;
-		  text-align: center;
-		  -webkit-transition-duration: 0.4s; /* Safari */
-		  transition-duration: 0.4s;
-		  text-decoration: none;
-		  overflow: hidden;
-		  cursor: pointer;
-		}
-		
-		.button:after {
-		  content: "";
-		  background: #90EE90;
-		  display: block;
-		  position: absolute;
-		  padding-top: 300%;
-		  padding-left: 350%;
-		  margin-left: -20px!important;
-		  margin-top: -120%;
-		  opacity: 0;
-		  transition: all 0.8s
-		}
-		
-		.button:active:after {
-		  padding: 0;
-		  margin: 0;
-		  opacity: 1;
-		  transition: 0s
-		}
-		</style>
+	.button {
+		position: relative;
+		background-color: #04AA6D;
+		border: none;
+		font-size: 28px;
+		color: #FFFFFF;
+		padding: 20px;
+		width: 200px;
+		text-align: center;
+		-webkit-transition-duration: 0.4s;
+		/* Safari */
+		transition-duration: 0.4s;
+		text-decoration: none;
+		overflow: hidden;
+		cursor: pointer;
+	}
+
+	.button:after {
+		content: "";
+		background: #90EE90;
+		display: block;
+		position: absolute;
+		padding-top: 300%;
+		padding-left: 350%;
+		margin-left: -20px !important;
+		margin-top: -120%;
+		opacity: 0;
+		transition: all 0.8s
+	}
+
+	.button:active:after {
+		padding: 0;
+		margin: 0;
+		opacity: 1;
+		transition: 0s
+	}
+	</style>
 	<img src="https://cdn.discordapp.com/attachments/1061391170678296736/1063903755260665948/image.png" width=1304 height=640 id="mapImage">
 	<h1 id="phaseDisplay">charged up simulator</h1>
-  
- <h3 id="gameTimeDisplay">Game time left:  <span class="js-timeout">2:45</span>.</h3>
-  <button id="js-startTimer">Start Countdown</button>
-<button id="js-resetTimer">Stop &amp; Reset</button>
-<button id="js-pauseTimer">Pause</button>
-<button id="js-resumeTimer">Resume</button>
-   <h5 id="timeDisplay">(time elapsed: xx:xx(</h5>
+	<h3 id="gameTimeDisplay">Game time left: <span class="js-timeout">2:45</span>.</h3>
+	<button id="js-startTimer">Start Countdown</button>
+	<button id="js-resetTimer">Stop &amp; Reset</button>
+	<button id="js-pauseTimer">Pause</button>
+	<button id="js-resumeTimer">Resume</button>
+	<h5 id="timeDisplay">(time elapsed: xx:xx(</h5>
 	<button id="settingsButton" onclick="toggleSettings()">Open settings</button>
-  
 	<div id="settings">
 		<br>
 		<h3>phase</h3>
@@ -82,56 +81,67 @@
 		<h3>path</h3>
 		<button onclick="toggleDrawing()">Start/stop drawing path</button>
 		<h3>Position</h3>
-		<button onclick="resetPos()">Reset position</button>
-		<button onclick="blueAlliance()">Blue alliance</button>
-		<button onclick="redAlliance()">Red alliance</button>
+		<button onclick="resetPos()">Reset both bots</button>
+		<button onclick="blueAlliance()">Reset blue bot</button>
+		<button onclick="redAlliance()">Reset red bot</button>
 	</div>
 	<br><br>
-	<canvas id="canvas" width=1304; height=640;>
-	</canvas>
+	<canvas id="canvas" width=1304; height=640;>Your browser is incompatible with HTML canvas</canvas>
+  <h2>blue bot</h2>
+  <h4 id="blueVeloX">X velocity: </h4>
+  <h4 id="blueVeloY">Y velocity: </h4>
+  <h2>red bot</h2>
+  <h4 id="redVeloX">X velocity: </h4>
+  <h4 id="redVeloY">Y velocity: </h4>
 	<script>
-	var settings = false;
+    var settings = false;
+	function resetPos() {
+    robot.x = 150;
+    robot.y = 370;
+    robot2.x = 1154;
+    robot2.y = 370;
     
-	function resetPos(){
-		robot.x = 630;
-		robot.y = 370;
-		pathDrawer.x = 630;
-		pathDrawer.y = 370;
-		update(isDrawing);
-	}
-	function blueAlliance() {
-		robot.x = 150;
-		robot.y = 370;
-		pathDrawer.x = 150;
-		pathDrawer.y = 370;
-    update(isDrawing);
-	}
-	function redAlliance(){
-		robot.x = 1154;
-		robot.y = 370;
-		pathDrawer.x = 1154;
-		pathDrawer.y = 370;
-    update(isDrawing);
-	}
+    pathDrawer2.x = 1154;
+    pathDrawer2.y = 370;
+    pathDrawer.x = 630;
+    pathDrawer.y = 370;
+    update();
+}
 
-	function toggleSettings() {
-		if(settings === false) {
-			$("#settings").css("display", "block");
-			settings = true;
-		} else if(settings === true) {
-			$("#settings").css("display", "none");
-			settings = false;
-		}
-	}
-	var canvas = document.getElementById("canvas");
-	var ctx = canvas.getContext("2d");
-	var map = document.getElementById("mapImage");
-	//draw field, 2px = 1 in. also fillRect(x, y, w, h)
-	function drawField() {
-		ctx.drawImage(map, 0, 0, canvas.width, canvas.height);
-	}
-   update()
-	/*function drawField() {
+function blueAlliance() {
+    robot.x = 150;
+    robot.y = 370;
+    pathDrawer.x = 150;
+    pathDrawer.y = 370;
+    update();
+}
+
+function redAlliance() {
+    robot2.x = 1154;
+    robot2.y = 370;
+    pathDrawer2.x = 1154;
+    pathDrawer2.y = 370;
+    update();
+}
+
+function toggleSettings() {
+    if (settings === false) {
+        $("#settings").css("display", "block");
+        settings = true;
+    } else if (settings === true) {
+        $("#settings").css("display", "none");
+        settings = false;
+    }
+}
+var canvas = document.getElementById("canvas");
+var ctx = canvas.getContext("2d");
+var map = document.getElementById("mapImage");
+//draw field, 2px = 1 in. also fillRect(x, y, w, h)
+function drawField() {
+    ctx.drawImage(map, 0, 0, canvas.width, canvas.height);
+}
+update();
+/*function drawField() {
 		   //field lines
 		   ctx.fillStyle = "gray";
 		   ctx.fillRect(652, 0, 10, 640);
@@ -173,189 +183,314 @@
 	   }
 	   drawField();
    */
-	function hitbox(x, y) {
-		this.x = x;
-		this.y = y;
-	}
-	
+function hitbox(x, y) {
+    this.x = x;
+    this.y = y;
+}
 
-	function pathPoint(x, y) {
-		this.x = x;
-		this.y = y;
-	}
-	var robot = new hitbox(150, 370);
-	var pathDrawer = new hitbox(150, 370);
-	var pressedW = false;
-	var pressedS = false;
-	var pressedA = false;
-	var pressedD = false;
-	document.onkeydown = function(e) {
-		console.log(e.keyCode);
-		if(e.keyCode == 87) {
-			pressedW = true;
-		} else if(e.keyCode == 83) {
-			pressedS = true;
-		} else if(e.keyCode == 65) {
-			pressedA = true;
-		} else if(e.keyCode == 68) {
-			pressedD = true;
-		}
-	}
-	document.onkeyup = function(e) {
-		console.log(e.keyCode);
-		if(e.keyCode == 87) {
-			pressedW = false;
-		} else if(e.keyCode == 83) {
-			pressedS = false;
-		} else if(e.keyCode == 65) {
-			pressedA = false;
-		} else if(e.keyCode == 68) {
-			pressedD = false;
-		}
-	}
-	var phase = "auto";
+function pathPoint(x, y) {
+    this.x = x;
+    this.y = y;
+}
 
-	function switchPhase(p) {
-		if(p == "auto") {
-			phase = "auto";
-		} else if(p == "teleop") {
-			phase = "teleop";
-		}
-	}
-	var isDrawing = false;
+function hitbox2(x, y) {
+    this.x = x;
+    this.y = y;
+}
 
-	function toggleDrawing() {
-		if(isDrawing === true) {
-			isDrawing = false;
-			update(isDrawing);
-		} else if(isDrawing === false) {
-			isDrawing = true;
-		}
-	}
+function pathPoint2(x, y) {
+    this.x = x;
+    this.y = y;
+}
+var robot = new hitbox(150, 370);
+var pathDrawer = new hitbox(150, 370);
+var robot2 = new hitbox(1154, 370);
+var pathDrawer2 = new hitbox(1154, 370);
+var pressedW = false;
+var pressedS = false;
+var pressedA = false;
+var pressedD = false;
+var pressedUp = false;
+var pressedDown = false;
+var pressedLeft = false;
+var pressedRight = false;
 
-	function update(p) {
-		if(p === false) {
-			ctx.clearRect(0, 0, canvas.width, canvas.height);
-			drawField();
-			ctx.fillStyle = "white";
-			ctx.fillRect(robot.x, robot.y, 50, 50);
-		} else if(p === true) {
-			ctx.fillStyle = "#04ff00";
-			ctx.fillRect(pathDrawer.x, pathDrawer.y, 5, 5);
-		}
-	}
-	update(isDrawing);
-	var robotSpeed = 3;
-
-	function changeSpeed() {
-		robotSpeed = parseInt(document.getElementById("speedInput").value);
-	}
-   
- timer = 0;
- setInterval(function() {timer+=1;},1000);
-   
-	setInterval(function() {
-   $("#timeDisplay").text("(time elapsed: "+timer+"s)");
-		if(phase == "auto") {
-			$("#phaseDisplay").text("phase: autonomous");
-		} else if(phase == "teleop") {
-			$("#phaseDisplay").text("phase: teleoperated");
-		}
-		if(isDrawing) {
-			if(pressedW === true) {
-				pathDrawer.y -= robotSpeed;
-				update(isDrawing);
-			} else if(pressedS === true) {
-				pathDrawer.y += robotSpeed;
-				update(isDrawing);
-			} else if(pressedA === true) {
-				pathDrawer.x -= robotSpeed;
-				update(isDrawing);
-			} else if(pressedD === true) {
-				pathDrawer.x += robotSpeed;
-				update(isDrawing);
-			}
-		} else {
-			pathDrawer.x = robot.x
-			pathDrawer.y = robot.y
-			if(pressedW === true) {
-				robot.y -= robotSpeed;
-				pathDrawer.y -= robotSpeed;
-				update(isDrawing);
-			} else if(pressedS === true) {
-				robot.y += robotSpeed;
-				pathDrawer.y += robotSpeed;
-				update(isDrawing);
-			} else if(pressedA === true) {
-				robot.x -= robotSpeed;
-				pathDrawer.x -= robotSpeed;
-				update(isDrawing);
-			} else if(pressedD === true) {
-				robot.x += robotSpeed;
-				pathDrawer.y -= robotSpeed;
-				update(isDrawing);
-			}
-		}
-    if(settings === true){
-    	$('#settingsButton').text("Close Settings");
-    }else{
-    	$('#settingsButton').text("Open Settings");
+document.onkeydown = function(e) {
+    console.log(e.keyCode);
+    if (e.keyCode == 87) {
+        pressedW = true;
+    } else if (e.keyCode == 83) {
+        pressedS = true;
+    } else if (e.keyCode == 65) {
+        pressedA = true;
+    } else if (e.keyCode == 68) {
+        pressedD = true;
     }
-	}, 1)
+  
+  	if (e.keyCode == 38) {
+        pressedUp = true;
+    } else if (e.keyCode == 40) {
+        pressedDown = true;
+    } else if (e.keyCode == 39) {
+        pressedRight = true;
+    } else if (e.keyCode == 37) {
+        pressedLeft = true;
+    }
+}
+document.onkeyup = function(e) {
+    console.log(e.keyCode);
+    if (e.keyCode == 87) {
+        pressedW = false;
+    } else if (e.keyCode == 83) {
+        pressedS = false;
+    } else if (e.keyCode == 65) {
+        pressedA = false;
+    } else if (e.keyCode == 68) {
+        pressedD = false;
+    }
+  
+  	if (e.keyCode == 38) {
+        pressedUp = false;
+    } else if (e.keyCode == 40) {
+        pressedDown = false;
+    } else if (e.keyCode == 39) {
+        pressedRight = false;
+    } else if (e.keyCode == 37) {
+        pressedLeft = false;
+    }
+}
+var phase = "auto";
+
+function switchPhase(p) {
+    if (p == "auto") {
+        phase = "auto";
+    } else if (p == "teleop") {
+        phase = "teleop";
+    }
+}
+var isDrawing = false;
+
+function toggleDrawing() {
+    if (isDrawing === true) {
+        isDrawing = false;
+        update(isDrawing);
+    } else if (isDrawing === false) {
+        isDrawing = true;
+    }
+}
+
+function update() {
+    if (isDrawing === false) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawField();
+        ctx.fillStyle = "#9497ff";
+        ctx.fillRect(robot.x, robot.y, 50, 50);
+        ctx.fillStyle = "#ff9494";
+        ctx.fillRect(robot2.x,robot2.y, 50, 50);
+    } else if (isDrawing === true) {
+        ctx.fillStyle = "#0000FF";
+        ctx.fillRect(pathDrawer.x, pathDrawer.y, 5, 5);
+        ctx.fillStyle = "#FF0000";
+        ctx.fillRect(pathDrawer2.x, pathDrawer2.y, 5, 5);
+    }
+}
+update();
+var robotSpeed = 3;
     
+var XvA = 0;
+var YvA = 0;
+var XvB = 0;
+var YvB = 0;
+
+function changeSpeed() {
+    robotSpeed = parseInt(document.getElementById("speedInput").value);
+}
+timer = 0;
+setInterval(function() {
+    timer += 1;
+}, 1000);
+    
+setInterval(function() {
+  	update();
+  	//log
+    $("#timeDisplay").text("(time elapsed: " + timer + "s)");
+    if (phase == "auto") {
+        $("#phaseDisplay").text("phase: autonomous");
+    } else if (phase == "teleop") {
+        $("#phaseDisplay").text("phase: teleoperated");
+    }
+  	
+  	$("#blueVeloX").text("x velocity: "+XvA);
+  	$("#blueVeloY").text("y velocity: "+YvA);
+ 		$("#redVeloX").text("x velocity: "+XvB);
+  	$("#redVeloY").text("y velocity: "+YvB);
+  
+  	//real movement
+  	robot.x -= XvA;
+    robot.y -= YvA;
+  	pathDrawer.x -= XvA;
+  	pathDrawer.y -= YvA;
+  
+  	robot2.x -= XvB;
+    robot2.y -= YvB;
+  	pathDrawer2.x -= XvB;
+  	pathDrawer2.y -= YvB;
+  	
+  	//constrain
+  	if(XvA > 2.16){
+    	XvA = 2.16;
+    }
+  	if(XvB > 2.16){
+    	XvB = 2.16;
+    }
+  	if(YvA > 2.16){
+    	YvA = 2.16;
+    }
+  	if(YvB > 2.16){
+    	YvB = 2.16;
+    }
+  
+  	if(XvA < -2.16){
+    	XvA = -2.16;
+    }
+  	if(XvB < -2.16){
+    	XvB = -2.16;
+    }
+  	if(YvA < -2.16){
+    	YvA = -2.16;
+    }
+  	if(YvB < -2.16){
+    	YvB = -2.16;
+    }
+  	
+  	
+  	//draw path
+    if (isDrawing) {
+      	if (pressedW === true) {
+            pathDrawer.y -= robotSpeed;
+        } else if (pressedS === true) {
+            pathDrawer.y += robotSpeed;
+        } else if (pressedA === true) {
+            pathDrawer.x -= robotSpeed;
+        } else if (pressedR === true) {
+            pathDrawer.x += robotSpeed;
+        }
+      
+        if (pressedUp === true) {
+            pathDrawer2.y -= robotSpeed;
+        } else if (pressedDown === true) {
+            pathDrawer2.y += robotSpeed;
+        } else if (pressedLeft === true) {
+            pathDrawer2.x -= robotSpeed;
+        } else if (pressedRight === true) {
+            pathDrawer2.x += robotSpeed;
+        }
+    } else {
+      	pathDrawer.x = robot.x
+        pathDrawer.y = robot.y
+        if (pressedW === true) {
+            YvA += 0.0624;
+        } else if (pressedS=== true) {
+            YvA -= 0.0624;
+        } else if (pressedD=== true) {
+            XvA -= 0.0624;
+        } else if (pressedA=== true) {
+            XvA += 0.0624;
+        } else {
+        	if (XvA< 0){
+          	XvA += 0.0624;
+          } else if (XvA> 0){
+          	XvA -= 0.0624;
+          }
+            
+          if (YvA< 0){
+          	YvA += 0.0624;
+          } else if (YvA> 0){
+          	YvA -= 0.0624;
+          }
+        }
+      
+        pathDrawer2.x = robot2.x
+        pathDrawer2.y = robot2.y
+        if (pressedUp === true) {
+            YvB += 0.0624;
+        } else if (pressedDown === true) {
+            YvB -= 0.0624;
+        } else if (pressedRight === true) {
+            XvB -= 0.0624;
+        } else if (pressedLeft === true) {
+            XvB += 0.0624;
+        } else {
+        	if (XvB < 0){
+          	XvB += 0.0624;
+          } else if (XvB > 0){
+          	XvB -= 0.0624;
+          }
+            
+          if (YvB < 0){
+          	YvB += 0.0624;
+          } else if (YvB > 0){
+          	YvB -= 0.0624;
+          }
+        }
+    }
+  
+    if(settings === true){
+        $('#settingsButton').text("Close Settings");
+    }else{
+        $('#settingsButton').text("Open Settings");
+    }
+}, 1)
 //timer
 var interval;
-    
-    
+
 function pauseTimer() {
-  clearInterval(interval);
+    clearInterval(interval);
 }
+
 function resumeTimer() {
-  countdown();
+    countdown();
 }
+
 function countdown() {
-  clearInterval(interval);
-  interval = setInterval( function() {
-      var timer = $('.js-timeout').html();
-      timer = timer.split(':');
-      var minutes = timer[0];
-      var seconds = timer[1];
-      seconds -= 1;
-      if (minutes < 0) return;
-      else if (seconds < 0 && minutes != 0) {
-          minutes -= 1;
-          seconds = 59;
-      }
-      else if (seconds < 10 && length.seconds != 2) seconds = '0' + seconds;
-
-      $('.js-timeout').html(minutes + ':' + seconds);
-
-      if (minutes == 0 && seconds == 0) clearInterval(interval);
-    	if (minutes == 2 && seconds == 30){
-      	phase = "teleop";
-      }else if(minutes == 2 && seconds == 45){
-      	phase = "autonomous";
-      }
-  }, 1000);
+    clearInterval(interval);
+    interval = setInterval(function() {
+        var timer = $('.js-timeout').html();
+        timer = timer.split(':');
+        var minutes = timer[0];
+        var seconds = timer[1];
+        seconds -= 1;
+        if (minutes < 0) return;
+        else if (seconds < 0 && minutes != 0) {
+            minutes -= 1;
+            seconds = 59;
+        } else if (seconds < 10 && length.seconds != 2) seconds = '0' + seconds;
+        $('.js-timeout').html(minutes + ':' + seconds);
+        if (minutes == 0 && seconds == 0) clearInterval(interval);
+        if (minutes == 2 && seconds == 30) {
+            phase = "teleop";
+        } else if (minutes == 2 && seconds == 45) {
+            phase = "autonomous";
+        }
+    }, 1000);
 }
-$('#js-pauseTimer').click(function () {
-  pauseTimer();
-  $("#gameTimeDisplay").css("color", "gray");
+$('#js-pauseTimer').click(function() {
+    pauseTimer();
+    $("#gameTimeDisplay").css("color", "gray");
 });
-$('#js-startTimer').click(function () {
-  $('.js-timeout').text("2:45");
-  countdown();
-  $("#gameTimeDisplay").css("color", "red");
+$('#js-startTimer').click(function() {
+    $('.js-timeout').text("2:45");
+    countdown();
+    $("#gameTimeDisplay").css("color", "red");
 });
-$('#js-resumeTimer').click(function () {
-  resumeTimer();
-  $("#gameTimeDisplay").css("color", "red");
+$('#js-resumeTimer').click(function() {
+    resumeTimer();
+    $("#gameTimeDisplay").css("color", "red");
 });
-
-$('#js-resetTimer').click(function () {
-  $('.js-timeout').text("2:45");
-  clearInterval(interval);
-  $("#gameTimeDisplay").css("color", "black");
+$('#js-resetTimer').click(function() {
+    $('.js-timeout').text("2:45");
+    clearInterval(interval);
+    $("#gameTimeDisplay").css("color", "black");
 });
 	</script>
 </body>
