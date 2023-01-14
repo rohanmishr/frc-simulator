@@ -1,224 +1,299 @@
- <html>
+<html>
 
- <head>
- 	<script src="https://code.jquery.com/jquery-3.6.3.js" integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
- 	<style>
- 	#settings {
- 		display: none;
- 	}
+<head>
+	<script src="https://code.jquery.com/jquery-3.6.3.js" integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
+	<style>
+	#settings {
+		display: none;
+	}
 
- 	img {
- 		display: none;
- 	}
+	img {
+		display: none;
+	}
 
- 	canvas {
- 		border-style: solid;
- 		border-width: 5px;
- 	}
+	canvas {
+		border-style: solid;
+		border-width: 5px;
+	}
 
- 	html {
- 		font-family: sans-serif;
- 		background-color: rgb(65, 65, 65);
- 	}
- 	</style>
- </head>
+	html {
+		font-family: sans-serif;
+		background-color: rgb(65, 65, 65);
+	}
+	</style>
+</head>
 
- <body>
- 	<img src="https://cdn.discordapp.com/attachments/1061391170678296736/1063903755260665948/image.png" width=1304 height=640 id="mapImage">
- 	<h1 id="phaseDisplay">charged up simulator</h1>
- 	<button onclick="toggleSettings()">Open settings</button>
- 	<div id="settings">
- 		<h3>phase</h3>
- 		<button onclick="switchPhase('auto')">Auto</button>
- 		<button onclick="switchPhase('teleop')">Teleop</button>
- 		<h3>speed</h3>
- 		<input placeholder="Enter speed value..." id="speedInput"><button onclick="changeSpeed()">Submit!</button>
- 		<h3>path</h3>
- 		<button onclick="toggleDrawing()">Start/stop drawing path</button>
- 	</div>
- 	<br><br>
- 	<canvas id="canvas" width=1304; height=640;>
- 	</canvas>
- 	<script>
- 	var settings = false;
+<body>
+	<img src="https://cdn.discordapp.com/attachments/1061391170678296736/1063903755260665948/image.png" width=1304 height=640 id="mapImage">
+	<h1 id="phaseDisplay">charged up simulator</h1>
+  
+ <h3 id="gameTimeDisplay">Game time left:  <span class="js-timeout">2:45</span>.</h3>
+  <button id="js-startTimer">Start Countdown</button>
+<button id="js-resetTimer">Stop &amp; Reset</button>
+<button id="js-pauseTimer">Pause</button>
+<button id="js-resumeTimer">Resume</button>
+   <h5 id="timeDisplay">(time elapsed: xx:xx(</h5>
+	<button id="settingsButton" onclick="toggleSettings()">Open settings</button>
+  
+	<div id="settings">
+		<br>
+		<h3>phase</h3>
+		<button onclick="switchPhase('auto')">Auto</button>
+		<button onclick="switchPhase('teleop')">Teleop</button>
+		<h3>speed</h3>
+		<input placeholder="Enter speed value..." id="speedInput"><button onclick="changeSpeed()">Submit!</button>
+		<h3>path</h3>
+		<button onclick="toggleDrawing()">Start/stop drawing path</button>
+	</div>
+	<br><br>
+	<canvas id="canvas" width=1304; height=640;>
+	</canvas>
+	<script>
+	var settings = false;
 
- 	function toggleSettings() {
- 		if(settings === false) {
- 			$("#settings").css("display", "block");
- 			settings = true;
- 		} else if(settings === true) {
- 			$("#settings").css("display", "none");
- 			settings = false;
- 		}
- 	}
- 	var canvas = document.getElementById("canvas");
- 	var ctx = canvas.getContext("2d");
- 	var map = document.getElementById("mapImage");
- 	//draw field, 2px = 1 in. also fillRect(x, y, w, h)
- 	function drawField() {
- 		ctx.drawImage(map, 0, 0, canvas.width, canvas.height);
- 	}
- 	/*function drawField() {
-			//field lines
-			ctx.fillStyle = "gray";
-			ctx.fillRect(652, 0, 10, 640);
-			//blue nodes
-			ctx.fillStyle = "blue";
-			ctx.fillRect(120, 220, 10, 440);
-			ctx.fillRect(0, 220, 260, 10);
-			//red nodes
-			ctx.fillStyle = "red";
-			ctx.fillRect(1184, 220, 10, 440);
-			ctx.fillRect(1054, 220, 260, 10);
-			//blue charging line
-			ctx.fillStyle = "blue";
-			ctx.fillRect(360, 310, 10, 440);
-			//charging station
-			ctx.fillRect(220, 480, 150, 10);
-			ctx.fillRect(220, 310, 150, 10);
-			ctx.fillRect(220, 310, 10, 180); //line on side
-			//above charging station
-			ctx.fillRect(260, 220, 10, 100);
-			//red charging line
-			ctx.fillStyle = "red";
-			ctx.fillRect(944, 310, 10, 440);
-			//charging station
-			ctx.fillRect(944, 480, 150, 10);
-			ctx.fillRect(944, 310, 150, 10);
-			ctx.fillRect(1094, 310, 10, 180); //line on side
-			//above charging station
-			ctx.fillRect(1044, 220, 10, 100);
-			//top
-			ctx.fillStyle = "blue";
-			ctx.fillRect(1044, 120, 10, 100);
-			ctx.fillRect(804, 120, 250, 10);
-			ctx.fillRect(804, 0, 10, 130);
-			ctx.fillStyle = "red";
-			ctx.fillRect(260, 120, 10, 100);
-			ctx.fillRect(260, 120, 250, 10);
-			ctx.fillRect(500, 0, 10, 130);
+	function toggleSettings() {
+		if(settings === false) {
+			$("#settings").css("display", "block");
+			settings = true;
+		} else if(settings === true) {
+			$("#settings").css("display", "none");
+			settings = false;
 		}
-		drawField();
-    */
- 	function hitbox(x, y) {
- 		this.x = x;
- 		this.y = y;
- 	}
+	}
+	var canvas = document.getElementById("canvas");
+	var ctx = canvas.getContext("2d");
+	var map = document.getElementById("mapImage");
+	//draw field, 2px = 1 in. also fillRect(x, y, w, h)
+	function drawField() {
+		ctx.drawImage(map, 0, 0, canvas.width, canvas.height);
+	}
+   update()
+	/*function drawField() {
+		   //field lines
+		   ctx.fillStyle = "gray";
+		   ctx.fillRect(652, 0, 10, 640);
+		   //blue nodes
+		   ctx.fillStyle = "blue";
+		   ctx.fillRect(120, 220, 10, 440);
+		   ctx.fillRect(0, 220, 260, 10);
+		   //red nodes
+		   ctx.fillStyle = "red";
+		   ctx.fillRect(1184, 220, 10, 440);
+		   ctx.fillRect(1054, 220, 260, 10);
+		   //blue charging line
+		   ctx.fillStyle = "blue";
+		   ctx.fillRect(360, 310, 10, 440);
+		   //charging station
+		   ctx.fillRect(220, 480, 150, 10);
+		   ctx.fillRect(220, 310, 150, 10);
+		   ctx.fillRect(220, 310, 10, 180); //line on side
+		   //above charging station
+		   ctx.fillRect(260, 220, 10, 100);
+		   //red charging line
+		   ctx.fillStyle = "red";
+		   ctx.fillRect(944, 310, 10, 440);
+		   //charging station
+		   ctx.fillRect(944, 480, 150, 10);
+		   ctx.fillRect(944, 310, 150, 10);
+		   ctx.fillRect(1094, 310, 10, 180); //line on side
+		   //above charging station
+		   ctx.fillRect(1044, 220, 10, 100);
+		   //top
+		   ctx.fillStyle = "blue";
+		   ctx.fillRect(1044, 120, 10, 100);
+		   ctx.fillRect(804, 120, 250, 10);
+		   ctx.fillRect(804, 0, 10, 130);
+		   ctx.fillStyle = "red";
+		   ctx.fillRect(260, 120, 10, 100);
+		   ctx.fillRect(260, 120, 250, 10);
+		   ctx.fillRect(500, 0, 10, 130);
+	   }
+	   drawField();
+   */
+	function hitbox(x, y) {
+		this.x = x;
+		this.y = y;
+	}
 
- 	function pathPoint(x, y) {
- 		this.x = x;
- 		this.y = y;
- 	}
- 	var robot = new hitbox(250, 250);
- 	var pathDrawer = new hitbox(250, 250);
- 	var pressedW = false;
- 	var pressedS = false;
- 	var pressedA = false;
- 	var pressedD = false;
- 	document.onkeydown = function(e) {
- 		console.log(e.keyCode);
- 		if(e.keyCode == 87) {
- 			pressedW = true;
- 		} else if(e.keyCode == 83) {
- 			pressedS = true;
- 		} else if(e.keyCode == 65) {
- 			pressedA = true;
- 		} else if(e.keyCode == 68) {
- 			pressedD = true;
- 		}
- 	}
- 	document.onkeyup = function(e) {
- 		console.log(e.keyCode);
- 		if(e.keyCode == 87) {
- 			pressedW = false;
- 		} else if(e.keyCode == 83) {
- 			pressedS = false;
- 		} else if(e.keyCode == 65) {
- 			pressedA = false;
- 		} else if(e.keyCode == 68) {
- 			pressedD = false;
- 		}
- 	}
- 	var phase = "auto";
+	function pathPoint(x, y) {
+		this.x = x;
+		this.y = y;
+	}
+	var robot = new hitbox(250, 250);
+	var pathDrawer = new hitbox(250, 250);
+	var pressedW = false;
+	var pressedS = false;
+	var pressedA = false;
+	var pressedD = false;
+	document.onkeydown = function(e) {
+		console.log(e.keyCode);
+		if(e.keyCode == 87) {
+			pressedW = true;
+		} else if(e.keyCode == 83) {
+			pressedS = true;
+		} else if(e.keyCode == 65) {
+			pressedA = true;
+		} else if(e.keyCode == 68) {
+			pressedD = true;
+		}
+	}
+	document.onkeyup = function(e) {
+		console.log(e.keyCode);
+		if(e.keyCode == 87) {
+			pressedW = false;
+		} else if(e.keyCode == 83) {
+			pressedS = false;
+		} else if(e.keyCode == 65) {
+			pressedA = false;
+		} else if(e.keyCode == 68) {
+			pressedD = false;
+		}
+	}
+	var phase = "auto";
 
- 	function switchPhase(p) {
- 		if(p == "auto") {
- 			phase = "auto";
- 		} else if(p == "teleop") {
- 			phase = "teleop";
- 		}
- 	}
- 	var isDrawing = false;
+	function switchPhase(p) {
+		if(p == "auto") {
+			phase = "auto";
+		} else if(p == "teleop") {
+			phase = "teleop";
+		}
+	}
+	var isDrawing = false;
 
- 	function toggleDrawing() {
- 		if(isDrawing === true) {
- 			isDrawing = false;
- 			update(isDrawing);
- 		} else if(isDrawing === false) {
- 			isDrawing = true;
- 		}
- 	}
+	function toggleDrawing() {
+		if(isDrawing === true) {
+			isDrawing = false;
+			update(isDrawing);
+		} else if(isDrawing === false) {
+			isDrawing = true;
+		}
+	}
 
- 	function update(p) {
- 		if(p === false) {
- 			ctx.clearRect(0, 0, canvas.width, canvas.height);
- 			drawField();
- 			ctx.fillStyle = "white";
- 			ctx.fillRect(robot.x, robot.y, 50, 50);
- 		} else if(p === true) {
- 			ctx.fillStyle = "#04ff00";
- 			ctx.fillRect(pathDrawer.x, pathDrawer.y, 5, 5);
- 		}
- 	}
- 	update(isDrawing);
- 	var robotSpeed = 3;
+	function update(p) {
+		if(p === false) {
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			drawField();
+			ctx.fillStyle = "white";
+			ctx.fillRect(robot.x, robot.y, 50, 50);
+		} else if(p === true) {
+			ctx.fillStyle = "#04ff00";
+			ctx.fillRect(pathDrawer.x, pathDrawer.y, 5, 5);
+		}
+	}
+	update(isDrawing);
+	var robotSpeed = 3;
 
- 	function changeSpeed() {
- 		robotSpeed = parseInt(document.getElementById("speedInput").value);
- 	}
- 	setInterval(function() {
- 		if(phase == "auto") {
- 			$("#phaseDisplay").text("phase: autonomous");
- 		} else if(phase == "teleop") {
- 			$("#phaseDisplay").text("phase: teleoperated");
- 		}
- 		if(isDrawing) {
- 			if(pressedW === true) {
- 				pathDrawer.y -= robotSpeed;
- 				update(isDrawing);
- 			} else if(pressedS === true) {
- 				pathDrawer.y += robotSpeed;
- 				update(isDrawing);
- 			} else if(pressedA === true) {
- 				pathDrawer.x -= robotSpeed;
- 				update(isDrawing);
- 			} else if(pressedD === true) {
- 				pathDrawer.x += robotSpeed;
- 				update(isDrawing);
- 			}
- 		} else {
- 			pathDrawer.x = robot.x
- 			pathDrawer.y = robot.y
- 			if(pressedW === true) {
- 				robot.y -= robotSpeed;
- 				pathDrawer.y -= robotSpeed;
- 				update(isDrawing);
- 			} else if(pressedS === true) {
- 				robot.y += robotSpeed;
- 				pathDrawer.y += robotSpeed;
- 				update(isDrawing);
- 			} else if(pressedA === true) {
- 				robot.x -= robotSpeed;
- 				pathDrawer.x -= robotSpeed;
- 				update(isDrawing);
- 			} else if(pressedD === true) {
- 				robot.x += robotSpeed;
- 				pathDrawer.y -= robotSpeed;
- 				update(isDrawing);
- 			}
- 		}
- 	}, 1)
- 	</script>
- </body>
+	function changeSpeed() {
+		robotSpeed = parseInt(document.getElementById("speedInput").value);
+	}
+   
+ timer = 0;
+ setInterval(function() {timer+=1;},1000);
+   
+	setInterval(function() {
+   $("#timeDisplay").text("(time elapsed: "+timer+"s)");
+		if(phase == "auto") {
+			$("#phaseDisplay").text("phase: autonomous");
+		} else if(phase == "teleop") {
+			$("#phaseDisplay").text("phase: teleoperated");
+		}
+		if(isDrawing) {
+			if(pressedW === true) {
+				pathDrawer.y -= robotSpeed;
+				update(isDrawing);
+			} else if(pressedS === true) {
+				pathDrawer.y += robotSpeed;
+				update(isDrawing);
+			} else if(pressedA === true) {
+				pathDrawer.x -= robotSpeed;
+				update(isDrawing);
+			} else if(pressedD === true) {
+				pathDrawer.x += robotSpeed;
+				update(isDrawing);
+			}
+		} else {
+			pathDrawer.x = robot.x
+			pathDrawer.y = robot.y
+			if(pressedW === true) {
+				robot.y -= robotSpeed;
+				pathDrawer.y -= robotSpeed;
+				update(isDrawing);
+			} else if(pressedS === true) {
+				robot.y += robotSpeed;
+				pathDrawer.y += robotSpeed;
+				update(isDrawing);
+			} else if(pressedA === true) {
+				robot.x -= robotSpeed;
+				pathDrawer.x -= robotSpeed;
+				update(isDrawing);
+			} else if(pressedD === true) {
+				robot.x += robotSpeed;
+				pathDrawer.y -= robotSpeed;
+				update(isDrawing);
+			}
+		}
+    if(settings === true){
+    	$('#settingsButton').text("Close Settings");
+    }else{
+    	$('#settingsButton').text("Open Settings");
+    }
+	}, 1)
+    
+//timer
+var interval;
+    
+    
+function pauseTimer() {
+  clearInterval(interval);
+}
+function resumeTimer() {
+  countdown();
+}
+function countdown() {
+  clearInterval(interval);
+  interval = setInterval( function() {
+      var timer = $('.js-timeout').html();
+      timer = timer.split(':');
+      var minutes = timer[0];
+      var seconds = timer[1];
+      seconds -= 1;
+      if (minutes < 0) return;
+      else if (seconds < 0 && minutes != 0) {
+          minutes -= 1;
+          seconds = 59;
+      }
+      else if (seconds < 10 && length.seconds != 2) seconds = '0' + seconds;
 
- </html>
+      $('.js-timeout').html(minutes + ':' + seconds);
+
+      if (minutes == 0 && seconds == 0) clearInterval(interval);
+    	if (minutes == 2 && seconds == 30){
+      	phase = "teleop";
+      }else if(minutes == 2 && seconds == 45){
+      	phase = "autonomous";
+      }
+  }, 1000);
+}
+$('#js-pauseTimer').click(function () {
+  pauseTimer();
+  $("#gameTimeDisplay").css("color", "gray");
+});
+$('#js-startTimer').click(function () {
+  $('.js-timeout').text("2:45");
+  countdown();
+  $("#gameTimeDisplay").css("color", "red");
+});
+$('#js-resumeTimer').click(function () {
+  resumeTimer();
+  $("#gameTimeDisplay").css("color", "red");
+});
+
+$('#js-resetTimer').click(function () {
+  $('.js-timeout').text("2:45");
+  clearInterval(interval);
+  $("#gameTimeDisplay").css("color", "black");
+});
+	</script>
+</body>
+
+</html>
