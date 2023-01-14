@@ -153,6 +153,8 @@
 
 	function switchPhase(p) {
 		if(p == "auto") {
+      clearInterval(interval);
+      countdown();
 			phase = "auto";
 		} else if(p == "teleop") {
 			phase = "teleop";
@@ -276,7 +278,7 @@ function countdown() {
 }
 $('#js-pauseTimer').click(function () {
   pauseTimer();
-  $("#gameTimeDisplay").css("color", "gray");
+  $("#gameTimeDisplay").css("color", "green");
 });
 $('#js-startTimer').click(function () {
   $('.js-timeout').text("2:45");
