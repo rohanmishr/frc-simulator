@@ -76,7 +76,7 @@
 		<h3>phase</h3>
 		<button onclick="switchPhase('auto')">Auto</button>
 		<button onclick="switchPhase('teleop')">Teleop</button>
-		<h3>speed</h3>
+		<h3>speed (for path drawer)</h3>
 		<input placeholder="Enter speed value..." id="speedInput"><button onclick="changeSpeed()">Submit!</button>
 		<h3>path</h3>
 		<button onclick="toggleDrawing()">Start/stop drawing path</button>
@@ -106,7 +106,7 @@
     pathDrawer.x = 630;
     pathDrawer.y = 370;
     update();
-}
+	}
 
 function blueAlliance() {
     robot.x = 150;
@@ -140,6 +140,11 @@ var map = document.getElementById("mapImage");
 function drawField() {
     ctx.drawImage(map, 0, 0, canvas.width, canvas.height);
 }
+    window.addEventListener("keydown", function(e) {
+    if(["Space","ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].indexOf(e.code) > -1) {
+        e.preventDefault();
+    }
+}, false);
 update();
 /*function drawField() {
 		   //field lines
@@ -284,9 +289,9 @@ function update() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         drawField();
         ctx.fillStyle = "#9497ff";
-        ctx.fillRect(robot.x, robot.y, 50, 50);
+        ctx.fillRect(robot.x, robot.y, 60, 60);
         ctx.fillStyle = "#ff9494";
-        ctx.fillRect(robot2.x,robot2.y, 50, 50);
+        ctx.fillRect(robot2.x,robot2.y, 60, 60);
     } else if (isDrawing === true) {
         ctx.fillStyle = "#0000FF";
         ctx.fillRect(pathDrawer.x, pathDrawer.y, 5, 5);
@@ -305,11 +310,59 @@ var YvB = 0;
 function changeSpeed() {
     robotSpeed = parseInt(document.getElementById("speedInput").value);
 }
+
+var maxVelocity = 2.16;
+function constrain(){
+	if(XvA > maxVelocity){
+    	XvA = maxVelocity;
+    }
+  	if(XvB > maxVelocity){
+    	XvB = maxVelocity;
+    }
+  	if(YvA > maxVelocity){
+    	YvA = maxVelocity;
+    }
+  	if(YvB > maxVelocity){
+    	YvB = maxVelocity;
+    }
+  
+  	if(XvA < -1*maxVelocity){
+    	XvA = -1*maxVelocity;
+    }
+  	if(XvB < -1*maxVelocity){
+    	XvB = -1*maxVelocity;
+    }
+  	if(YvA < -1*maxVelocity){
+    	YvA = -1*maxVelocity;
+    }
+  	if(YvB < -1*maxVelocity){
+    	YvB = -1*maxVelocity;
+    }
+  	if(XvA > -0.04 && XvA < 0.04){
+    	XvA = 0;
+    }
+  
+  	if(YvA > -0.04 && YvA < 0.04){
+    	YvA = 0;
+    }
+  
+  	if(XvB > -0.04 && XvB < 0.04){
+    	XvB = 0;
+    }
+  
+  	if(YvB > -0.04 && YvB < 0.04){
+    	YvB = 0;
+    }
+}
 timer = 0;
 setInterval(function() {
     timer += 1;
 }, 1000);
     
+function smooth(x){
+	return Math.round(x * 100) / 100
+}
+
 setInterval(function() {
   	update();
   	//log
@@ -320,10 +373,10 @@ setInterval(function() {
         $("#phaseDisplay").text("phase: teleoperated");
     }
   	
-  	$("#blueVeloX").text("x velocity: "+XvA);
-  	$("#blueVeloY").text("y velocity: "+YvA);
- 		$("#redVeloX").text("x velocity: "+XvB);
-  	$("#redVeloY").text("y velocity: "+YvB);
+  	$("#blueVeloX").text("x velocity: "+Math.abs(smooth(XvA))+" pixels/ms ("+smooth((Math.abs(smooth(XvA)) * 4.1666666666666667))+" ft/s);");  
+  	$("#blueVeloY").text("y velocity: "+Math.abs(smooth(YvA))+" pixels/ms ("+smooth((Math.abs(smooth(YvA)) * 4.1666666666666667))+" ft/s);");
+ 		$("#redVeloX").text("x velocity: "+Math.abs(smooth(XvB))+" pixels/ms ("+smooth((Math.abs(smooth(XvB)) * 4.1666666666666667))+" ft/s);");
+  	$("#redVeloY").text("y velocity: "+Math.abs(smooth(YvB))+" pixels/ms ("+smooth((Math.abs(smooth(YvB)) * 4.1666666666666667))+" ft/s);");
   
   	//real movement
   	robot.x -= XvA;
@@ -336,43 +389,25 @@ setInterval(function() {
   	pathDrawer2.x -= XvB;
   	pathDrawer2.y -= YvB;
   	
-  	//constrain
-  	if(XvA > 2.16){
-    	XvA = 2.16;
-    }
-  	if(XvB > 2.16){
-    	XvB = 2.16;
-    }
-  	if(YvA > 2.16){
-    	YvA = 2.16;
-    }
-  	if(YvB > 2.16){
-    	YvB = 2.16;
-    }
-  
-  	if(XvA < -2.16){
-    	XvA = -2.16;
-    }
-  	if(XvB < -2.16){
-    	XvB = -2.16;
-    }
-  	if(YvA < -2.16){
-    	YvA = -2.16;
-    }
-  	if(YvB < -2.16){
-    	YvB = -2.16;
-    }
-  	
+  	//smooth
+  	XvA = smooth(XvA);
+  	XvB = smooth(XvB);
+  	YvA = smooth(YvA);
+  	YvB = smooth(YvB);
   	
   	//draw path
     if (isDrawing) {
+      XvA = 0;
+      XvB = 0;
+      YvA = 0;
+      YvB = 0;
       	if (pressedW === true) {
             pathDrawer.y -= robotSpeed;
         } else if (pressedS === true) {
             pathDrawer.y += robotSpeed;
         } else if (pressedA === true) {
             pathDrawer.x -= robotSpeed;
-        } else if (pressedR === true) {
+        } else if (pressedD === true) {
             pathDrawer.x += robotSpeed;
         }
       
@@ -390,23 +425,33 @@ setInterval(function() {
         pathDrawer.y = robot.y
         if (pressedW === true) {
             YvA += 0.0624;
-        } else if (pressedS=== true) {
+          	constrain();
+        } else if (pressedS === true) {
             YvA -= 0.0624;
-        } else if (pressedD=== true) {
+          	constrain();
+        } else if (pressedD === true) {
             XvA -= 0.0624;
-        } else if (pressedA=== true) {
+          	constrain();
+        } else if (pressedA === true) {
             XvA += 0.0624;
+          	constrain();
         } else {
-        	if (XvA< 0){
+          
+          //decelerate
+        	if (XvA < 0){
           	XvA += 0.0624;
+            constrain();
           } else if (XvA> 0){
           	XvA -= 0.0624;
+            constrain();
           }
             
-          if (YvA< 0){
+          if (YvA < 0){
           	YvA += 0.0624;
-          } else if (YvA> 0){
+            constrain();
+          } else if (YvA > 0){
           	YvA -= 0.0624;
+            constrain();
           }
         }
       
@@ -414,23 +459,33 @@ setInterval(function() {
         pathDrawer2.y = robot2.y
         if (pressedUp === true) {
             YvB += 0.0624;
+          	constrain();
         } else if (pressedDown === true) {
             YvB -= 0.0624;
+          	constrain();
         } else if (pressedRight === true) {
             XvB -= 0.0624;
+          	constrain();
         } else if (pressedLeft === true) {
             XvB += 0.0624;
+          	constrain();
         } else {
+          
+          //decelerate
         	if (XvB < 0){
           	XvB += 0.0624;
+            constrain();
           } else if (XvB > 0){
           	XvB -= 0.0624;
+            constrain();
           }
             
           if (YvB < 0){
           	YvB += 0.0624;
+            constrain();
           } else if (YvB > 0){
           	YvB -= 0.0624;
+            constrain();
           }
         }
     }
