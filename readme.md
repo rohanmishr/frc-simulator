@@ -17,4 +17,5 @@ Stopwatch
 
 ## Changelog
 :tada: Updated UI
+
 🧑‍💻 Moved all CSS into a single file
