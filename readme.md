@@ -15,6 +15,6 @@ Acceleration (WIP)
 Timer and auto phase switching
 Stopwatch
 
-##Changelog
+## Changelog
 :tada: Updated UI
 🧑‍💻 Moved all CSS into a single file
