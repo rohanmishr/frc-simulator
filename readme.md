@@ -1,9 +1,9 @@
-#Simulator for FRC 2023 Charged Up
+# Simulator for FRC 2023 Charged Up
 
-##Note: Some features are not yet implemented and are not guaranteed to work
+## Note: Some features are not yet implemented and are not guaranteed to work
 This is a model of the charged up game field. This is for testing purposes only. Currently not all models are to scale.
 
-##Features
+## Features
 2 Robots that you can control (wasd and arrow keys)
 Ability to draw paths for the robots to follow (WIP)
 Ability to change the speed of the robot
