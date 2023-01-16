@@ -1,96 +1,41 @@
 <html>
-
+<link rel="stylesheet" href="style.css">
 <head>
 	<script src="https://code.jquery.com/jquery-3.6.3.js" integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
-	<style>
-	#settings {
-		display: none;
-	}
 
-	img {
-		display: none;
-	}
-
-	canvas {
-		border-style: solid;
-		border-width: 5px;
-	}
-
-	html {
-		font-family: sans-serif;
-		background-color: rgb(65, 65, 65);
-	}
-	</style>
 </head>
 
 <body>
-	<style>
-	.button {
-		position: relative;
-		background-color: #04AA6D;
-		border: none;
-		font-size: 28px;
-		color: #FFFFFF;
-		padding: 20px;
-		width: 200px;
-		text-align: center;
-		-webkit-transition-duration: 0.4s;
-		/* Safari */
-		transition-duration: 0.4s;
-		text-decoration: none;
-		overflow: hidden;
-		cursor: pointer;
-	}
 
-	.button:after {
-		content: "";
-		background: #90EE90;
-		display: block;
-		position: absolute;
-		padding-top: 300%;
-		padding-left: 350%;
-		margin-left: -20px !important;
-		margin-top: -120%;
-		opacity: 0;
-		transition: all 0.8s
-	}
-
-	.button:active:after {
-		padding: 0;
-		margin: 0;
-		opacity: 1;
-		transition: 0s
-	}
-	</style>
-	<img src="https://cdn.discordapp.com/attachments/1061391170678296736/1063903755260665948/image.png" width=1304 height=640 id="mapImage">
-	<h1 id="phaseDisplay">charged up simulator</h1>
+    <img src="https://cdn.discordapp.com/attachments/1061391170678296736/1063903755260665948/image.png" id="mapImage" width="1304" height="640" style="text-align: center;" />
+	<h1 id="phaseDisplay">Charged Up Simulator</h1>
 	<h3 id="gameTimeDisplay">Game time left: <span class="js-timeout">2:45</span>.</h3>
 	<button id="js-startTimer">Start Countdown</button>
 	<button id="js-resetTimer">Stop &amp; Reset</button>
 	<button id="js-pauseTimer">Pause</button>
 	<button id="js-resumeTimer">Resume</button>
-	<h5 id="timeDisplay">(time elapsed: xx:xx(</h5>
+	<h4 id="timeDisplay">(Time Elapsed: xx:xx(</h5>
 	<button id="settingsButton" onclick="toggleSettings()">Open settings</button>
 	<div id="settings">
 		<br>
-		<h3>phase</h3>
-		<button onclick="switchPhase('auto')">Auto</button>
-		<button onclick="switchPhase('teleop')">Teleop</button>
-		<h3>speed (for path drawer)</h3>
-		<input placeholder="Enter speed value..." id="speedInput"><button onclick="changeSpeed()">Submit!</button>
-		<h3>path</h3>
-		<button onclick="toggleDrawing()">Start/stop drawing path</button>
+		<h3>Phase</h3>
+		<button onclick="switchPhase('auto')" id="autoSwitch">Auto</button>
+		<button onclick="switchPhase('teleop')" id="teleSwitch">Teleop</button>
+		<h3>Speed (for path drawer)</h3>
+		<input placeholder="Enter speed value..." id="speedInput"><button onclick="changeSpeed()" id="speedSubmit">Submit!</button>
+		<h3>Path</h3>
+		<button onclick="toggleDrawing()" id="toggleDrawing">Start/Stop drawing path</button>
 		<h3>Position</h3>
-		<button onclick="resetPos()">Reset both bots</button>
-		<button onclick="blueAlliance()">Reset blue bot</button>
-		<button onclick="redAlliance()">Reset red bot</button>
+		<button onclick="resetPos()" id="resetPos">Reset both bots</button>
+		<button onclick="blueAlliance()" id="resetBlue">Reset blue bot</button>
+		<button onclick="redAlliance()" id="resetRed">Reset red bot</button>
 	</div>
 	<br><br>
 	<canvas id="canvas" width=1304; height=640;>Your browser is incompatible with HTML canvas</canvas>
-  <h2>blue bot</h2>
+  <h2>Blue Robot</h2>
   <h4 id="blueVeloX">X velocity: </h4>
   <h4 id="blueVeloY">Y velocity: </h4>
-  <h2>red bot</h2>
+  <h2>Red Robot</h2>
   <h4 id="redVeloX">X velocity: </h4>
   <h4 id="redVeloY">Y velocity: </h4>
 	<script>
@@ -368,9 +313,9 @@ setInterval(function() {
   	//log
     $("#timeDisplay").text("(time elapsed: " + timer + "s)");
     if (phase == "auto") {
-        $("#phaseDisplay").text("phase: autonomous");
+        $("#phaseDisplay").text("Phase: Autonomous");
     } else if (phase == "teleop") {
-        $("#phaseDisplay").text("phase: teleoperated");
+        $("#phaseDisplay").text("Phase: Teleoperated");
     }
   	
   	$("#blueVeloX").text("x velocity: "+Math.abs(smooth(XvA))+" pixels/ms ("+smooth((Math.abs(smooth(XvA)) * 4.1666666666666667))+" ft/s);");  
@@ -549,5 +494,14 @@ $('#js-resetTimer').click(function() {
 });
 	</script>
 </body>
+<br>
+	<br>
+	<br>
+	<hr>
+	<br>
+	<h3 id="calcFooter">Spike 293</h3>
+	<div id="footer">
+		<a href="tools.html" id="linkToTools">Other Tools</a>
+		</div>
 
 </html>
