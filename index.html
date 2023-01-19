@@ -304,7 +304,7 @@ setInterval(function() {
 function smooth(x){
 	return Math.round(x * 100) / 100
 }
-
+	 
 setInterval(function() {
   	update();
   	//log
@@ -315,6 +315,26 @@ setInterval(function() {
         $("#phaseDisplay").text("Phase: Teleoperated");
     }
   	
+	if(robot.x <= 0){
+		robot.x = 0;
+	}else if(robot.x >=1244){
+		robot.x = 1244;
+	}else if(robot.y <=0){
+		robot.y = 0;
+	}else if(robot.y >= 592){
+		robot.y = 592;
+	}
+	
+	if(robot2.x <= 0){
+		robot2.x = 0;
+	}else if(robot2.x >=1244){
+		robot2.x = 1244;
+	}else if(robot2.y <=0){
+		robot2.y = 0;
+	}else if(robot2.y >= 592){
+		robot2.y = 592;
+	}
+	
   	$("#blueVeloX").text("x velocity: "+Math.abs(smooth(XvA))+" pixels/ms ("+smooth((Math.abs(smooth(XvA)) * 4.1666666666666667))+" ft/s);");  
   	$("#blueVeloY").text("y velocity: "+Math.abs(smooth(YvA))+" pixels/ms ("+smooth((Math.abs(smooth(YvA)) * 4.1666666666666667))+" ft/s);");
  		$("#redVeloX").text("x velocity: "+Math.abs(smooth(XvB))+" pixels/ms ("+smooth((Math.abs(smooth(XvB)) * 4.1666666666666667))+" ft/s);");
