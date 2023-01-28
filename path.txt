@@ -1,0 +1,14 @@
+PathTest{
+	Positions{
+		PATHPOINTS=[]
+		POSITIONS=0
+	}
+	Settings{
+		PHASE="AUTO"
+		RTIME=10
+		DRAWERSPEED=5
+	}
+	Custom{
+		COLOR="RED"
+	}
+}
